@@ -18,28 +18,13 @@
   <script type="text/babel">
     const { useState } = React;
 
-    // Paste ONLY roadmapData + ProgressBar + SeniorNodeRoadmap here
-    // (remove import/export lines)
-
-    // ----------------------------
-    // YOUR COMPONENT CODE START
-    // ----------------------------
-
-    // paste your roadmapData here
-    // paste ProgressBar
-    // paste SeniorNodeRoadmap
-    // BUT remove:
-    // import { useState } from "react";
-    // export default
-
-
 const roadmapData = [
   {
     id: "phase1",
     phase: "Phase 1",
     title: "Node.js Internals & Advanced Concepts",
-    duration: "4â€“6 weeks",
-    icon: "âš™ï¸",
+    duration: "4–6 weeks",
+    icon: "⚙️",
     color: "#0f766e",
     bgLight: "#f0fdfa",
     topics: [
@@ -47,7 +32,7 @@ const roadmapData = [
         name: "Event Loop Deep Dive",
         subtopics: [
           "Call stack, microtask queue, macrotask queue",
-          "Phases: timers â†’ pending callbacks â†’ idle/prepare â†’ poll â†’ check â†’ close",
+          "Phases: timers → pending callbacks → idle/prepare → poll → check → close",
           "process.nextTick() vs setImmediate() vs Promise.resolve()",
           "Starvation scenarios and how to avoid them",
         ],
@@ -56,12 +41,12 @@ const roadmapData = [
       {
         name: "V8 Engine Internals",
         subtopics: [
-          "JIT compilation: Ignition (interpreter) â†’ TurboFan (optimizing compiler)",
-          "Hidden classes & inline caching â€” why object shape matters",
+          "JIT compilation: Ignition (interpreter) → TurboFan (optimizing compiler)",
+          "Hidden classes & inline caching — why object shape matters",
           "Garbage collection: Scavenger (young gen) & Mark-Sweep-Compact (old gen)",
           "Memory leaks: closures, event listeners, global refs, detached DOM",
         ],
-        theory: "V8 compiles JS to machine code in two stages. Ignition generates bytecode fast; TurboFan optimizes hot functions. Hidden classes are internal type descriptors â€” adding properties in different orders creates different hidden classes, killing inline cache hits. For GC, young generation uses semi-space copying (Scavenger), old generation uses Mark-Sweep-Compact.",
+        theory: "V8 compiles JS to machine code in two stages. Ignition generates bytecode fast; TurboFan optimizes hot functions. Hidden classes are internal type descriptors — adding properties in different orders creates different hidden classes, killing inline cache hits. For GC, young generation uses semi-space copying (Scavenger), old generation uses Mark-Sweep-Compact.",
       },
       {
         name: "Streams & Buffers",
@@ -91,7 +76,7 @@ const roadmapData = [
           "async iterators & for-await-of for streaming data",
           "Error handling: unhandledRejection, uncaughtException strategies",
         ],
-        theory: "AsyncLocalStorage (async_hooks) lets you propagate context through async call chains without passing it manually â€” essential for request tracing and logging. AbortController (from Web API, now in Node) lets you cancel fetch, timers, and custom async work. Async iterators turn any data source into a consumable async stream.",
+        theory: "AsyncLocalStorage (async_hooks) lets you propagate context through async call chains without passing it manually — essential for request tracing and logging. AbortController (from Web API, now in Node) lets you cancel fetch, timers, and custom async work. Async iterators turn any data source into a consumable async stream.",
       },
       {
         name: "Module System Deep Dive",
@@ -109,8 +94,8 @@ const roadmapData = [
     id: "phase2",
     phase: "Phase 2",
     title: "System Design & Architecture",
-    duration: "5â€“7 weeks",
-    icon: "ðŸ—ï¸",
+    duration: "5–7 weeks",
+    icon: "🗃️",
     color: "#7c3aed",
     bgLight: "#f5f3ff",
     topics: [
@@ -124,7 +109,7 @@ const roadmapData = [
           "Repository pattern for data access abstraction",
           "Dependency Injection (manual & with frameworks like tsyringe/InversifyJS)",
         ],
-        theory: "Patterns aren't academic â€” they solve real problems. Singleton ensures one DB pool. Factory decouples object creation from usage. Strategy lets you swap auth methods (JWT, OAuth, API key) without changing controllers. Repository abstracts data access so you can swap Postgres for Mongo without touching business logic. DI makes everything testable.",
+        theory: "Patterns aren't academic — they solve real problems. Singleton ensures one DB pool. Factory decouples object creation from usage. Strategy lets you swap auth methods (JWT, OAuth, API key) without changing controllers. Repository abstracts data access so you can swap Postgres for Mongo without touching business logic. DI makes everything testable.",
       },
       {
         name: "API Design",
@@ -146,7 +131,7 @@ const roadmapData = [
           "Service discovery, API gateway pattern",
           "Circuit breaker, bulkhead, retry with exponential backoff",
         ],
-        theory: "Microservices aren't inherently better â€” they trade code complexity for operational complexity. Bounded contexts from DDD help you draw service boundaries correctly. Use synchronous communication for queries, asynchronous (RabbitMQ, Kafka) for commands. The Saga pattern replaces distributed transactions with a sequence of local transactions + compensating actions.",
+        theory: "Microservices aren't inherently better — they trade code complexity for operational complexity. Bounded contexts from DDD help you draw service boundaries correctly. Use synchronous communication for queries, asynchronous (RabbitMQ, Kafka) for commands. The Saga pattern replaces distributed transactions with a sequence of local transactions + compensating actions.",
       },
       {
         name: "Event-Driven Architecture",
@@ -157,7 +142,7 @@ const roadmapData = [
           "Idempotency keys for exactly-once processing",
           "Dead letter queues and retry strategies",
         ],
-        theory: "Event sourcing stores every state change as an immutable event â€” you derive current state by replaying events. CQRS separates read models (optimized for queries) from write models (optimized for commands). Together, they enable scalable, auditable systems. Kafka is ideal for high-throughput event streaming; RabbitMQ for traditional task distribution.",
+        theory: "Event sourcing stores every state change as an immutable event — you derive current state by replaying events. CQRS separates read models (optimized for queries) from write models (optimized for commands). Together, they enable scalable, auditable systems. Kafka is ideal for high-throughput event streaming; RabbitMQ for traditional task distribution.",
       },
       {
         name: "Authentication & Security",
@@ -168,7 +153,7 @@ const roadmapData = [
           "Rate limiting, helmet.js, CORS, CSP headers",
           "Secrets management (Vault, env vars, KMS)",
         ],
-        theory: "JWTs are stateless but can't be revoked easily â€” use short-lived access tokens with refresh token rotation. OAuth 2.0 delegates authentication; PKCE prevents authorization code interception. For security, think in layers: input validation (Joi/Zod), parameterized queries, CSP headers, rate limiting, and always hash passwords with bcrypt/argon2.",
+        theory: "JWTs are stateless but can't be revoked easily — use short-lived access tokens with refresh token rotation. OAuth 2.0 delegates authentication; PKCE prevents authorization code interception. For security, think in layers: input validation (Joi/Zod), parameterized queries, CSP headers, rate limiting, and always hash passwords with bcrypt/argon2.",
       },
       {
         name: "Scalability Patterns",
@@ -179,7 +164,7 @@ const roadmapData = [
           "Database sharding & read replicas",
           "Stateless services and session externalization",
         ],
-        theory: "Horizontal scaling (more machines) beats vertical (bigger machine) for resilience. Cache at every layer: application (LRU), distributed (Redis), edge (CDN). Stateless services are key â€” externalize sessions to Redis so any instance can handle any request. Consistent hashing distributes load while minimizing redistribution when nodes join/leave.",
+        theory: "Horizontal scaling (more machines) beats vertical (bigger machine) for resilience. Cache at every layer: application (LRU), distributed (Redis), edge (CDN). Stateless services are key — externalize sessions to Redis so any instance can handle any request. Consistent hashing distributes load while minimizing redistribution when nodes join/leave.",
       },
     ],
   },
@@ -187,8 +172,8 @@ const roadmapData = [
     id: "phase3",
     phase: "Phase 3",
     title: "Databases & ORMs",
-    duration: "4â€“5 weeks",
-    icon: "ðŸ—„ï¸",
+    duration: "4–5 weeks",
+    icon: "🗄️",
     color: "#c2410c",
     bgLight: "#fff7ed",
     topics: [
@@ -201,7 +186,7 @@ const roadmapData = [
           "Partitioning, materialized views, CTEs, window functions",
           "JSONB for semi-structured data alongside relational data",
         ],
-        theory: "PostgreSQL is the go-to for relational workloads. EXPLAIN ANALYZE shows actual execution plans â€” look for sequential scans on large tables (add indexes). B-tree for equality/range, GIN for full-text/JSONB, BRIN for naturally ordered data. Connection pooling is critical in Node because each connection is expensive (~10MB RAM). Use PgBouncer in transaction mode for microservices.",
+        theory: "PostgreSQL is the go-to for relational workloads. EXPLAIN ANALYZE shows actual execution plans — look for sequential scans on large tables (add indexes). B-tree for equality/range, GIN for full-text/JSONB, BRIN for naturally ordered data. Connection pooling is critical in Node because each connection is expensive (~10MB RAM). Use PgBouncer in transaction mode for microservices.",
       },
       {
         name: "MongoDB Advanced",
@@ -212,7 +197,7 @@ const roadmapData = [
           "Transactions in replica sets, read/write concerns",
           "Change streams for real-time data pipelines",
         ],
-        theory: "MongoDB's strength is flexible schema and horizontal scaling via sharding. Embed data that's read together; reference data that changes independently or grows unboundedly. The aggregation pipeline is MongoDB's SQL â€” learn it deeply. Change streams let you react to data changes in real-time (great for syncing caches, triggering workflows).",
+        theory: "MongoDB's strength is flexible schema and horizontal scaling via sharding. Embed data that's read together; reference data that changes independently or grows unboundedly. The aggregation pipeline is MongoDB's SQL — learn it deeply. Change streams let you react to data changes in real-time (great for syncing caches, triggering workflows).",
       },
       {
         name: "Redis Beyond Caching",
@@ -223,7 +208,7 @@ const roadmapData = [
           "Lua scripting for atomic operations",
           "Redis as session store, rate limiter, distributed lock (Redlock)",
         ],
-        theory: "Redis isn't just a cache â€” it's a data structure server. Sorted Sets power leaderboards and priority queues. Redis Streams is a log-based structure similar to Kafka (with consumer groups). Redlock implements distributed locks across Redis instances. Lua scripts execute atomically on the server â€” use for read-modify-write operations that need atomicity.",
+        theory: "Redis isn't just a cache — it's a data structure server. Sorted Sets power leaderboards and priority queues. Redis Streams is a log-based structure similar to Kafka (with consumer groups). Redlock implements distributed locks across Redis instances. Lua scripts execute atomically on the server — use for read-modify-write operations that need atomicity.",
       },
       {
         name: "ORMs & Query Builders",
@@ -234,17 +219,17 @@ const roadmapData = [
           "When to use raw SQL vs ORM (complex queries, performance)",
           "Migration strategies for zero-downtime deploys",
         ],
-        theory: "Prisma is the modern choice â€” schema-first approach generates type-safe client code. TypeORM is more traditional (similar to Hibernate/ActiveRecord). Knex.js gives you a query builder without the full ORM abstraction. Senior devs know when to drop to raw SQL: complex joins, CTEs, window functions, or performance-critical queries. Always use migrations, never manual schema changes.",
+        theory: "Prisma is the modern choice — schema-first approach generates type-safe client code. TypeORM is more traditional (similar to Hibernate/ActiveRecord). Knex.js gives you a query builder without the full ORM abstraction. Senior devs know when to drop to raw SQL: complex joins, CTEs, window functions, or performance-critical queries. Always use migrations, never manual schema changes.",
       },
       {
         name: "Data Modeling & Patterns",
         subtopics: [
-          "Normalization (1NFâ€“3NF) vs strategic denormalization",
+          "Normalization (1NF–3NF) vs strategic denormalization",
           "Soft deletes, audit trails, temporal tables",
           "Multi-tenancy: schema-per-tenant, row-level, DB-per-tenant",
           "Polyglot persistence: right DB for the right job",
         ],
-        theory: "Normalize first, denormalize for performance. Soft deletes (deleted_at column) keep data recoverable but complicate queries â€” use database views to abstract. Multi-tenancy choice depends on scale: row-level is simplest, schema-per-tenant balances isolation and cost, DB-per-tenant gives maximum isolation. Polyglot persistence means using Postgres for transactions, Redis for caching, Elasticsearch for search â€” each DB for its strength.",
+        theory: "Normalize first, denormalize for performance. Soft deletes (deleted_at column) keep data recoverable but complicate queries — use database views to abstract. Multi-tenancy choice depends on scale: row-level is simplest, schema-per-tenant balances isolation and cost, DB-per-tenant gives maximum isolation. Polyglot persistence means using Postgres for transactions, Redis for caching, Elasticsearch for search — each DB for its strength.",
       },
     ],
   },
@@ -252,8 +237,8 @@ const roadmapData = [
     id: "phase4",
     phase: "Phase 4",
     title: "DevOps, CI/CD & Cloud",
-    duration: "4â€“5 weeks",
-    icon: "â˜ï¸",
+    duration: "4–5 weeks",
+    icon: "☁️",
     color: "#1d4ed8",
     bgLight: "#eff6ff",
     topics: [
@@ -266,13 +251,13 @@ const roadmapData = [
           "Security: non-root user, .dockerignore, minimal base images (alpine/distroless)",
           "Health checks, graceful shutdown (SIGTERM handling)",
         ],
-        theory: "Multi-stage builds separate build dependencies from runtime â€” your final image should only contain production code and node_modules. Copy package.json before source code so npm install is cached when only code changes. Always run as non-root user. Handle SIGTERM for graceful shutdown: close server, finish in-flight requests, close DB connections, then exit.",
+        theory: "Multi-stage builds separate build dependencies from runtime — your final image should only contain production code and node_modules. Copy package.json before source code so npm install is cached when only code changes. Always run as non-root user. Handle SIGTERM for graceful shutdown: close server, finish in-flight requests, close DB connections, then exit.",
       },
       {
         name: "CI/CD Pipelines",
         subtopics: [
           "GitHub Actions / GitLab CI pipeline design",
-          "Testing stages: lint â†’ unit â†’ integration â†’ e2e",
+          "Testing stages: lint → unit → integration → e2e",
           "Automated versioning (semantic-release, conventional commits)",
           "Container registry push, image scanning (Trivy/Snyk)",
           "Deployment strategies: blue-green, canary, rolling",
@@ -299,7 +284,7 @@ const roadmapData = [
           "APM tools (Datadog, New Relic) for production debugging",
           "Alerting strategies: avoid alert fatigue, actionable alerts only",
         ],
-        theory: "Observability has three pillars: logs, traces, metrics. Structured JSON logs with correlation IDs let you trace a request across services. OpenTelemetry is the standard for distributed tracing â€” it instruments your code and exports spans to backends like Jaeger. The RED method (request Rate, Error rate, Duration) gives you the essential service health metrics. Instrument everything in production.",
+        theory: "Observability has three pillars: logs, traces, metrics. Structured JSON logs with correlation IDs let you trace a request across services. OpenTelemetry is the standard for distributed tracing — it instruments your code and exports spans to backends like Jaeger. The RED method (request Rate, Error rate, Duration) gives you the essential service health metrics. Instrument everything in production.",
       },
       {
         name: "Cloud Services (AWS Focus)",
@@ -318,21 +303,21 @@ const roadmapData = [
     id: "phase5",
     phase: "Phase 5",
     title: "Testing, Performance & Soft Skills",
-    duration: "3â€“4 weeks",
-    icon: "ðŸŽ¯",
+    duration: "3–4 weeks",
+    icon: "🎯",
     color: "#be123c",
     bgLight: "#fff1f2",
     topics: [
       {
         name: "Testing Strategy",
         subtopics: [
-          "Testing pyramid: unit (70%) â†’ integration (20%) â†’ e2e (10%)",
+          "Testing pyramid: unit (70%) → integration (20%) → e2e (10%)",
           "Unit testing with Vitest/Jest, mocking strategies",
           "Integration tests: testcontainers for real DB/Redis in tests",
           "API testing: supertest for HTTP, contract testing (Pact)",
           "Load testing with k6 or Artillery",
         ],
-        theory: "The testing pyramid guides investment: many fast unit tests, fewer integration tests, minimal e2e tests. Use testcontainers to spin up real Postgres/Redis in Docker for integration tests â€” no more mocking databases. Contract testing (Pact) verifies API contracts between services without running everything together. Load test before production to find bottlenecks.",
+        theory: "The testing pyramid guides investment: many fast unit tests, fewer integration tests, minimal e2e tests. Use testcontainers to spin up real Postgres/Redis in Docker for integration tests — no more mocking databases. Contract testing (Pact) verifies API contracts between services without running everything together. Load test before production to find bottlenecks.",
       },
       {
         name: "Performance Optimization",
@@ -354,12 +339,12 @@ const roadmapData = [
           "Code review best practices: what to look for",
           "Technical documentation: ADRs (Architecture Decision Records)",
         ],
-        theory: "Clean Architecture separates business logic from infrastructure (DB, HTTP, external APIs) using dependency inversion. Your core domain should have zero imports from Express, Prisma, or AWS SDK. TypeScript is non-negotiable for senior roles â€” master generics, conditional types, and discriminated unions. Write ADRs to document why you made architectural decisions.",
+        theory: "Clean Architecture separates business logic from infrastructure (DB, HTTP, external APIs) using dependency inversion. Your core domain should have zero imports from Express, Prisma, or AWS SDK. TypeScript is non-negotiable for senior roles — master generics, conditional types, and discriminated unions. Write ADRs to document why you made architectural decisions.",
       },
       {
         name: "Senior-Level Soft Skills",
         subtopics: [
-          "System design interviews: framework (requirements â†’ high-level â†’ deep dive â†’ tradeoffs)",
+          "System design interviews: framework (requirements → high-level → deep dive → tradeoffs)",
           "Technical leadership: mentoring, code reviews, RFC process",
           "Estimating and breaking down complex projects",
           "Communicating tradeoffs to non-technical stakeholders",
@@ -393,7 +378,8 @@ const ProgressBar = ({ completed, total }) => {
   );
 };
 
-export default function SeniorNodeRoadmap() {
+// Removed 'export default'
+function SeniorNodeRoadmap() {
   const [expandedPhase, setExpandedPhase] = useState("phase1");
   const [expandedTopic, setExpandedTopic] = useState(null);
   const [completed, setCompleted] = useState({});
@@ -433,7 +419,7 @@ export default function SeniorNodeRoadmap() {
         minHeight: "100vh",
         background: "#fafaf9",
         fontFamily:
-          "'SÃ¶hne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          "'Söhne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       }}
     >
       {/* Header */}
@@ -467,7 +453,7 @@ export default function SeniorNodeRoadmap() {
             Senior Node.js Backend Developer
           </h1>
           <p style={{ fontSize: 14, opacity: 0.7, margin: "0 0 20px 0" }}>
-            ~20â€“27 weeks â€¢ Theory-first approach â€¢ Intermediate â†’ Senior
+            ~20–27 weeks • Theory-first approach • Intermediate → Senior
           </p>
 
           <div
@@ -567,7 +553,7 @@ export default function SeniorNodeRoadmap() {
                     >
                       {phase.phase}
                     </span>
-                    <span style={{ fontSize: 11, color: "#9ca3af" }}>â€¢ {phase.duration}</span>
+                    <span style={{ fontSize: 11, color: "#9ca3af" }}>• {phase.duration}</span>
                   </div>
                   <div style={{ fontSize: 16, fontWeight: 600, color: "#111827" }}>
                     {phase.title}
@@ -584,7 +570,7 @@ export default function SeniorNodeRoadmap() {
                     transition: "transform 0.2s ease",
                   }}
                 >
-                  â–¾
+                  ▾
                 </div>
               </div>
 
@@ -655,7 +641,7 @@ export default function SeniorNodeRoadmap() {
                               transition: "transform 0.2s ease",
                             }}
                           >
-                            â€º
+                            ›
                           </span>
                         </div>
 
@@ -730,7 +716,7 @@ export default function SeniorNodeRoadmap() {
                                         fontWeight: 700,
                                       }}
                                     >
-                                      {isDone ? "âœ“" : ""}
+                                      {isDone ? "✓" : ""}
                                     </div>
                                     <span
                                       style={{
@@ -770,9 +756,9 @@ export default function SeniorNodeRoadmap() {
             lineHeight: 1.6,
           }}
         >
-          <strong style={{ color: "#334155" }}>ðŸ’¡ How to use this roadmap:</strong> Expand
+          <strong style={{ color: "#334155" }}>💡 How to use this roadmap:</strong> Expand
           each phase and topic to read the theory. Check off subtopics as you learn them.
-          Ask me to deep-dive into any specific topic â€” I'll explain the theory in detail
+          Ask me to deep-dive into any specific topic — I'll explain the theory in detail
           with code examples.
         </div>
       </div>
@@ -780,7 +766,6 @@ export default function SeniorNodeRoadmap() {
   );
 }
 
-    // Example ending:
     ReactDOM.createRoot(document.getElementById("root"))
       .render(<SeniorNodeRoadmap />);
   </script>
