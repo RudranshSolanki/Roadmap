@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Learning Routine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- React CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel to run JSX directly -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body style="margin:0">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const STAGES = [
+            {
+                id: "theory",
+                number: 1,
+                title: "Theory Deep Dive",
+                icon: "📖",
+                duration: "20–30 min",
+                color: "#7c3aed",
+                description: "I explain the topic in depth with real-world analogies, internals, and code examples.",
+                whatHappens: [
+                    "I present a comprehensive theory explanation",
+                    "Key concepts broken down with analogies",
+                    "Code examples showing how things work under the hood",
+                    "Common misconceptions addressed upfront",
+                ],
+                yourRole: "Read, absorb, ask clarifying questions. No pressure yet.",
+            },
+            {
+                id: "explain_back",
+                number: 2,
+                title: "Explain It Back",
+                icon: "🎤",
+                duration: "10–15 min",
+                color: "#0891b2",
+                description: "You explain the concept back to me as if teaching a junior developer.",
+                whatHappens: [
+                    "I ask: 'Explain [topic] as if I'm a junior dev on your team'",
+                    "You write your explanation in your own words",
+                    "I evaluate: accuracy, completeness, clarity",
+                    "I point out gaps or misconceptions in your understanding",
+                ],
+                yourRole: "Write freely. Don't look back at the theory — this tests real understanding.",
+            },
+            {
+                id: "quiz",
+                number: 3,
+                title: "Quick-Fire Quiz",
+                icon: "⚡",
+                duration: "10–15 min",
+                color: "#ca8a04",
+                description: "10 rapid questions mixing conceptual, tricky edge cases, and practical knowledge.",
+                whatHappens: [
+                    "10 questions: mix of multiple choice, true/false, and short answer",
+                    "Covers both fundamentals and tricky edge cases",
+                    "Instant scoring with explanations for wrong answers",
+                    "Identifies specific weak spots to revisit",
+                ],
+                yourRole: "Answer quickly. Trust your gut — this reveals what you truly internalized.",
+            },
+            {
+                id: "code_review",
+                number: 4,
+                title: "Code Review Challenge",
+                icon: "🔍",
+                duration: "15–20 min",
+                color: "#dc2626",
+                description: "I show you code with hidden bugs, anti-patterns, or performance issues. You find and fix them.",
+                whatHappens: [
+                    "I present 2–3 code snippets related to the topic",
+                    "Each has intentional issues: bugs, memory leaks, security holes, anti-patterns",
+                    "You identify problems and propose fixes",
+                    "I grade your review and explain anything missed",
+                ],
+                yourRole: "Think like a senior reviewer. Look for correctness, performance, security, and maintainability.",
+            },
+            {
+                id: "scenario",
+                number: 5,
+                title: "Production Scenario",
+                icon: "🔥",
+                duration: "15–20 min",
+                color: "#ea580c",
+                description: "A realistic production problem to diagnose and solve, simulating on-the-job challenges.",
+                whatHappens: [
+                    "I describe a production incident or architectural challenge",
+                    "Example: 'Your API response times spiked from 50ms to 2s after deploying...'",
+                    "You walk me through your diagnosis and solution",
+                    "I evaluate your thought process, not just the answer",
+                ],
+                yourRole: "Think out loud. Show your debugging methodology and reasoning.",
+            },
+            {
+                id: "system_design",
+                number: 6,
+                title: "Mini System Design",
+                icon: "🏗️",
+                duration: "20–30 min",
+                color: "#16a34a",
+                description: "A focused design exercise related to the topic, practicing interview-style thinking.",
+                whatHappens: [
+                    "A scoped design problem tied to the current topic",
+                    "Example (after Streams topic): 'Design a file upload service handling 10GB files'",
+                    "I play interviewer — asking follow-ups about tradeoffs and edge cases",
+                    "We discuss your design together at the end",
+                ],
+                yourRole: "Follow the framework: Requirements → High-level → Deep dive → Tradeoffs.",
+            },
+            {
+                id: "scorecard",
+                number: 7,
+                title: "Scorecard & Next Steps",
+                icon: "📊",
+                duration: "5 min",
+                color: "#6366f1",
+                description: "I give you a comprehensive score across all stages and recommend what to do next.",
+                whatHappens: [
+                    "Score breakdown across all 6 evaluation stages",
+                    "Overall readiness rating: Needs Work → Solid → Senior-Ready",
+                    "Specific action items for weak areas",
+                    "Recommendation: move on or revisit before proceeding",
+                ],
+                yourRole: "Review honestly. It's okay to revisit — depth > speed.",
+            },
+        ];
+
+        const SAMPLE_ROUTINE = {
+            topic: "Event Loop Deep Dive",
+            phase: "Phase 1: Node.js Internals",
+            stages: [
+                {
+                    stage: "Theory",
+                    preview: "I'll explain the 6 phases of the event loop, microtask vs macrotask queues, and how libuv orchestrates everything...",
+                },
+                {
+                    stage: "Explain Back",
+                    preview: '"Explain to a junior dev: why does Promise.resolve().then() execute before setTimeout(fn, 0)?"',
+                },
+                {
+                    stage: "Quiz",
+                    preview: "Q: What is the output?\nsetImmediate(() => console.log('A'));\nprocess.nextTick(() => console.log('B'));\nPromise.resolve().then(() => console.log('C'));",
+                },
+                {
+                    stage: "Code Review",
+                    preview: '// Find the performance issue:\napp.get("/data", async (req, res) => {\n  const items = await db.getAll();\n  const results = [];\n  for (const item of items) {\n    results.push(await processItem(item));\n  }\n  res.json(results);\n});',
+                },
+                {
+                    stage: "Scenario",
+                    preview: '"Your Node.js server handles 1000 req/s fine, but adding a PDF generation endpoint drops everything to 50 req/s. CPU is at 100%. What\'s happening and how do you fix it?"',
+                },
+                {
+                    stage: "Design",
+                    preview: '"Design a task queue system that processes 10,000 jobs/hour with priorities, retries, and dead letter handling. Use Node.js."',
+                },
+            ],
+        };
+
+        const COMMANDS = [
+            { cmd: "Let's start [topic name]", desc: "Begin the full routine for a topic" },
+            { cmd: "Next stage", desc: "Move to the next evaluation stage" },
+            { cmd: "Skip to quiz", desc: "Jump to a specific stage" },
+            { cmd: "I need more practice on this", desc: "Get extra questions on current stage" },
+            { cmd: "I'm ready to move on", desc: "Get scorecard and proceed to next topic" },
+            { cmd: "Review my weak areas", desc: "Revisit topics I scored low on" },
+        ];
+
+        function LearningRoutine() {
+            const [activeStage, setActiveStage] = useState(null);
+            const [showSample, setShowSample] = useState(false);
+            const [showCommands, setShowCommands] = useState(false);
+
+            return (
+                <div
+                    style={{
+                        minHeight: "100vh",
+                        background: "#fafaf9",
+                        fontFamily: "'Söhne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    }}
+                >
+                    {/* Header */}
+                    <div
+                        style={{
+                            background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%)",
+                            padding: "36px 24px 28px",
+                            color: "white",
+                        }}
+                    >
+                        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+                            <div
+                                style={{
+                                    fontSize: 10,
+                                    textTransform: "uppercase",
+                                    letterSpacing: 2.5,
+                                    opacity: 0.5,
+                                    marginBottom: 8,
+                                }}
+                            >
+                                Learning System
+                            </div>
+                            <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 6px", letterSpacing: -0.5 }}>
+                                Structured Learning Routine
+                            </h1>
+                            <p style={{ fontSize: 14, opacity: 0.6, margin: 0 }}>
+                                7-stage evaluation cycle for every topic • ~90–120 min per topic
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px 60px" }}>
+                        {/* Flow visualization */}
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                flexWrap: "wrap",
+                                gap: 4,
+                                marginBottom: 28,
+                                padding: "16px 12px",
+                                background: "white",
+                                borderRadius: 12,
+                                border: "1px solid #e5e7eb",
+                            }}
+                        >
+                            {STAGES.map((s, i) => (
+                                <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                    <div
+                                        onClick={() => setActiveStage(activeStage === s.id ? null : s.id)}
+                                        style={{
+                                            padding: "6px 12px",
+                                            borderRadius: 20,
+                                            background: activeStage === s.id ? s.color : "#f3f4f6",
+                                            color: activeStage === s.id ? "white" : "#6b7280",
+                                            fontSize: 12,
+                                            fontWeight: 600,
+                                            cursor: "pointer",
+                                            transition: "all 0.2s ease",
+                                            whiteSpace: "nowrap",
+                                        }}
+                                    >
+                                        {s.icon} {s.title}
+                                    </div>
+                                    {i < STAGES.length - 1 && (
+                                        <span style={{ color: "#d1d5db", fontSize: 14 }}>→</span>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Stage Cards */}
+                        {STAGES.map((stage) => {
+                            const isOpen = activeStage === stage.id;
+                            return (
+                                <div
+                                    key={stage.id}
+                                    style={{
+                                        marginBottom: 12,
+                                        borderRadius: 12,
+                                        background: "white",
+                                        border: isOpen ? `2px solid ${stage.color}30` : "1px solid #e5e7eb",
+                                        boxShadow: isOpen ? "0 4px 20px rgba(0,0,0,0.06)" : "none",
+                                        overflow: "hidden",
+                                        transition: "all 0.2s ease",
+                                    }}
+                                >
+                                    <div
+                                        onClick={() => setActiveStage(isOpen ? null : stage.id)}
+                                        style={{
+                                            padding: "16px 20px",
+                                            cursor: "pointer",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 14,
+                                            userSelect: "none",
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                width: 40,
+                                                height: 40,
+                                                borderRadius: "50%",
+                                                background: `${stage.color}12`,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontSize: 18,
+                                                flexShrink: 0,
+                                            }}
+                                        >
+                                            {stage.icon}
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                                <span
+                                                    style={{
+                                                        fontSize: 10,
+                                                        fontWeight: 700,
+                                                        color: stage.color,
+                                                        textTransform: "uppercase",
+                                                        letterSpacing: 1.5,
+                                                    }}
+                                                >
+                                                    Stage {stage.number}
+                                                </span>
+                                                <span style={{ fontSize: 11, color: "#9ca3af" }}>• {stage.duration}</span>
+                                            </div>
+                                            <div style={{ fontSize: 15, fontWeight: 600, color: "#111827", marginTop: 2 }}>
+                                                {stage.title}
+                                            </div>
+                                        </div>
+                                        <div
+                                            style={{
+                                                fontSize: 16,
+                                                color: "#9ca3af",
+                                                transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                                                transition: "transform 0.2s ease",
+                                            }}
+                                        >
+                                            ▾
+                                        </div>
+                                    </div>
+
+                                    {isOpen && (
+                                        <div style={{ padding: "0 20px 20px" }}>
+                                            <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 14px", lineHeight: 1.5 }}>
+                                                {stage.description}
+                                            </p>
+
+                                            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                                                {/* What happens */}
+                                                <div
+                                                    style={{
+                                                        flex: "1 1 280px",
+                                                        background: "#f9fafb",
+                                                        borderRadius: 10,
+                                                        padding: "14px 16px",
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            fontSize: 10,
+                                                            textTransform: "uppercase",
+                                                            letterSpacing: 1.5,
+                                                            color: stage.color,
+                                                            fontWeight: 700,
+                                                            marginBottom: 10,
+                                                        }}
+                                                    >
+                                                        What happens
+                                                    </div>
+                                                    {stage.whatHappens.map((item, i) => (
+                                                        <div
+                                                            key={i}
+                                                            style={{
+                                                                display: "flex",
+                                                                gap: 8,
+                                                                alignItems: "flex-start",
+                                                                marginBottom: 8,
+                                                                fontSize: 13,
+                                                                color: "#374151",
+                                                                lineHeight: 1.5,
+                                                            }}
+                                                        >
+                                                            <span style={{ color: stage.color, flexShrink: 0, marginTop: 1 }}>▸</span>
+                                                            {item}
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                {/* Your role */}
+                                                <div
+                                                    style={{
+                                                        flex: "1 1 200px",
+                                                        background: `${stage.color}08`,
+                                                        borderRadius: 10,
+                                                        padding: "14px 16px",
+                                                        borderLeft: `3px solid ${stage.color}`,
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            fontSize: 10,
+                                                            textTransform: "uppercase",
+                                                            letterSpacing: 1.5,
+                                                            color: stage.color,
+                                                            fontWeight: 700,
+                                                            marginBottom: 8,
+                                                        }}
+                                                    >
+                                                        Your role
+                                                    </div>
+                                                    <p style={{ fontSize: 13, color: "#374151", margin: 0, lineHeight: 1.6 }}>
+                                                        {stage.yourRole}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+
+                        {/* Sample Routine */}
+                        <div
+                            style={{
+                                marginTop: 28,
+                                borderRadius: 12,
+                                background: "white",
+                                border: "1px solid #e5e7eb",
+                                overflow: "hidden",
+                            }}
+                        >
+                            <div
+                                onClick={() => setShowSample(!showSample)}
+                                style={{
+                                    padding: "16px 20px",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 12,
+                                    userSelect: "none",
+                                    background: showSample ? "#fffbeb" : "white",
+                                }}
+                            >
+                                <span style={{ fontSize: 20 }}>👀</span>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: 15, fontWeight: 600, color: "#111827" }}>
+                                        Sample Routine Preview
+                                    </div>
+                                    <div style={{ fontSize: 12, color: "#9ca3af" }}>
+                                        See what a full routine looks like for "{SAMPLE_ROUTINE.topic}"
+                                    </div>
+                                </div>
+                                <span style={{ color: "#9ca3af", transform: showSample ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+                            </div>
+
+                            {showSample && (
+                                <div style={{ padding: "0 20px 20px" }}>
+                                    <div
+                                        style={{
+                                            fontSize: 11,
+                                            color: "#92400e",
+                                            background: "#fef3c7",
+                                            padding: "8px 12px",
+                                            borderRadius: 8,
+                                            marginBottom: 14,
+                                        }}
+                                    >
+                                        📍 {SAMPLE_ROUTINE.phase} → {SAMPLE_ROUTINE.topic}
+                                    </div>
+                                    {SAMPLE_ROUTINE.stages.map((s, i) => (
+                                        <div
+                                            key={i}
+                                            style={{
+                                                padding: "12px 14px",
+                                                background: "#f9fafb",
+                                                borderRadius: 8,
+                                                marginBottom: 8,
+                                                borderLeft: `3px solid ${STAGES[i].color}`,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    fontSize: 11,
+                                                    fontWeight: 700,
+                                                    color: STAGES[i].color,
+                                                    textTransform: "uppercase",
+                                                    letterSpacing: 1,
+                                                    marginBottom: 6,
+                                                }}
+                                            >
+                                                Stage {i + 1}: {s.stage}
+                                            </div>
+                                            <pre
+                                                style={{
+                                                    fontSize: 12,
+                                                    color: "#374151",
+                                                    margin: 0,
+                                                    whiteSpace: "pre-wrap",
+                                                    fontFamily: "'SF Mono', 'Fira Code', monospace",
+                                                    lineHeight: 1.6,
+                                                }}
+                                            >
+                                                {s.preview}
+                                            </pre>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Commands */}
+                        <div
+                            style={{
+                                marginTop: 16,
+                                borderRadius: 12,
+                                background: "white",
+                                border: "1px solid #e5e7eb",
+                                overflow: "hidden",
+                            }}
+                        >
+                            <div
+                                onClick={() => setShowCommands(!showCommands)}
+                                style={{
+                                    padding: "16px 20px",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 12,
+                                    userSelect: "none",
+                                }}
+                            >
+                                <span style={{ fontSize: 20 }}>💬</span>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: 15, fontWeight: 600, color: "#111827" }}>
+                                        Commands You Can Use
+                                    </div>
+                                    <div style={{ fontSize: 12, color: "#9ca3af" }}>
+                                        Phrases to control the routine flow
+                                    </div>
+                                </div>
+                                <span style={{ color: "#9ca3af", transform: showCommands ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+                            </div>
+
+                            {showCommands && (
+                                <div style={{ padding: "0 20px 20px" }}>
+                                    {COMMANDS.map((c, i) => (
+                                        <div
+                                            key={i}
+                                            style={{
+                                                display: "flex",
+                                                gap: 12,
+                                                alignItems: "center",
+                                                padding: "10px 0",
+                                                borderBottom: i < COMMANDS.length - 1 ? "1px solid #f3f4f6" : "none",
+                                            }}
+                                        >
+                                            <code
+                                                style={{
+                                                    fontSize: 12,
+                                                    background: "#f3f4f6",
+                                                    padding: "4px 10px",
+                                                    borderRadius: 6,
+                                                    color: "#7c3aed",
+                                                    fontWeight: 600,
+                                                    whiteSpace: "nowrap",
+                                                }}
+                                            >
+                                                {c.cmd}
+                                            </code>
+                                            <span style={{ fontSize: 13, color: "#6b7280" }}>{c.desc}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* CTA */}
+                        <div
+                            style={{
+                                marginTop: 28,
+                                padding: "20px 24px",
+                                background: "linear-gradient(135deg, #1e1b4b, #312e81)",
+                                borderRadius: 12,
+                                color: "white",
+                                textAlign: "center",
+                            }}
+                        >
+                            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>
+                                Ready to begin?
+                            </div>
+                            <p style={{ fontSize: 13, opacity: 0.7, margin: "0 0 4px" }}>
+                                Type <code style={{ background: "rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 4, fontSize: 12 }}>Let's start Event Loop Deep Dive</code> to kick off your first routine
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root"))
+            .render(<LearningRoutine />);
+    </script>
+</body>
+
+</html>
